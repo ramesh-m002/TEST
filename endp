@@ -1,0 +1,26 @@
+public function getCourseOfferings($searchJson)
+{
+    // Ensure body is JSON
+    if (is_array($searchJson)) {
+        $searchJson = wp_json_encode($searchJson);
+    }
+    $response = wp_remote_post(
+        $this->configJson->urls->courseOfferingURL,
+        array(
+            'method'  => 'POST',
+            'timeout' => $this->timeout,
+            'headers' => array(
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/json'
+            ),
+            'body'    => $searchJson,
+            'data_format' => 'body'
+        )
+    );
+    if (is_wp_error($response)) {
+        error_log($response->get_error_message());
+        return false;
+    }
+    $body = wp_remote_retrieve_body($response);
+    return $body;
+}
