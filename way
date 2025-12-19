@@ -1,0 +1,24 @@
+function forceObject($value)
+{
+    if (is_array($value)) {
+        // If numeric keys → force object
+        if (array_keys($value) === range(0, count($value) - 1)) {
+            return (object) $value;
+        }
+        foreach ($value as $k => $v) {
+            $value[$k] = forceObject($v);
+        }
+    }
+    return $value;
+}
+
+// Remove empty searchTerm
+if (empty($searchJson['searchTerm'])) {
+    unset($searchJson['searchTerm']);
+}
+// 🔥 Force arrays to objects to match Postman
+$searchJson = forceObject($searchJson);
+// Encode JSON
+$jsonBody = wp_json_encode($searchJson);
+// Debug
+error_log('REQUEST JSON => ' . $jsonBody);
