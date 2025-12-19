@@ -1,9 +1,7 @@
-public function getCourseOfferings($searchJson)
+public function getCourseOfferings($searchData)
 {
-    // Ensure body is JSON
-    if (is_array($searchJson)) {
-        $searchJson = wp_json_encode($searchJson);
-    }
+    // searchData MUST be an array matching C# model
+    $jsonBody = wp_json_encode($searchData);
     $response = wp_remote_post(
         $this->configJson->urls->courseOfferingURL,
         array(
@@ -13,14 +11,12 @@ public function getCourseOfferings($searchJson)
                 'Content-Type' => 'application/json',
                 'Accept'       => 'application/json'
             ),
-            'body'    => $searchJson,
-            'data_format' => 'body'
+            'body'    => $jsonBody
         )
     );
     if (is_wp_error($response)) {
         error_log($response->get_error_message());
         return false;
     }
-    $body = wp_remote_retrieve_body($response);
-    return $body;
+    return wp_remote_retrieve_body($response);
 }
