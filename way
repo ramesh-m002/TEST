@@ -52,3 +52,20 @@ function castJsonTypes($value)
     }
     return $value;
 }
+---------------
+
+// ---- Normalize payload inline ----
+array_walk_recursive($payload, function (&$value) {
+    if (!is_string($value)) return;
+    if ($value === 'true') {
+        $value = true;
+    } elseif ($value === 'false') {
+        $value = false;
+    } elseif ($value === '') {
+        $value = null;
+    } elseif (ctype_digit($value)) {
+        $value = (int) $value;
+    } elseif (is_numeric($value)) {
+        $value = (float) $value;
+    }
+});
