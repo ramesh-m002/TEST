@@ -1,17 +1,26 @@
 public function getCourseOfferings($searchData)
 {
-    // searchData MUST be an array matching C# model
-    $jsonBody = wp_json_encode($searchData);
+    // 🔴 IMPORTANT: $searchData MUST be an array
+    if (!is_array($searchData)) {
+        error_log('searchData is not an array');
+        return false;
+    }
+    $jsonBody = wp_json_encode(
+        $searchData,
+        JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    );
+    // Debug what you send
+    error_log('REQUEST JSON: ' . $jsonBody);
     $response = wp_remote_post(
         $this->configJson->urls->courseOfferingURL,
         array(
             'method'  => 'POST',
-            'timeout' => $this->timeout,
+            'timeout' => 30,
             'headers' => array(
-                'Content-Type' => 'application/json',
+                'Content-Type' => 'application/json; charset=utf-8',
                 'Accept'       => 'application/json'
             ),
-            'body'    => $jsonBody
+            'body' => $jsonBody
         )
     );
     if (is_wp_error($response)) {
