@@ -22,3 +22,33 @@ $searchJson = forceObject($searchJson);
 $jsonBody = wp_json_encode($searchJson);
 // Debug
 error_log('REQUEST JSON => ' . $jsonBody);
+
+
+----------------
+
+function castJsonTypes($value)
+{
+    if (is_array($value)) {
+        foreach ($value as $k => $v) {
+            $value[$k] = castJsonTypes($v);
+        }
+        return $value;
+    }
+    if (!is_string($value)) {
+        return $value;
+    }
+    // Boolean
+    if ($value === 'true') return true;
+    if ($value === 'false') return false;
+    // Null
+    if ($value === 'null') return null;
+    // Integer
+    if (ctype_digit($value)) {
+        return (int) $value;
+    }
+    // Float
+    if (is_numeric($value)) {
+        return (float) $value;
+    }
+    return $value;
+}
