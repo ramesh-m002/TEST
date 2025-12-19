@@ -29,3 +29,22 @@ public function getCourseOfferings($searchData)
     }
     return wp_remote_retrieve_body($response);
 }
+
+
+------------------
+
+// Ensure input is an array
+    if (!is_array($searchJson)) {
+        error_log('searchJson must be an array');
+        return false;
+    }
+    // ✅ Remove searchTerm if empty or null
+    if (
+        array_key_exists('searchTerm', $searchJson) &&
+        (
+            $searchJson['searchTerm'] === '' ||
+            $searchJson['searchTerm'] === null
+        )
+    ) {
+        unset($searchJson['searchTerm']);
+    }
