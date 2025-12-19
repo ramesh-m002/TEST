@@ -69,3 +69,17 @@ array_walk_recursive($payload, function (&$value) {
         $value = (float) $value;
     }
 });
+
+-------------------------------------
+
+foreach ($payload as $key => &$value) {
+    // 🔢 Integers
+    if (in_array($key, ['pageSize', 'pageNumber', 'courseOfferingsSortByEnum'], true)) {
+        $value = ($value !== '' && $value !== null) ? (int) $value : null;
+    }
+    // 🔘 Boolean
+    if ($key === 'sortAscending') {
+        $value = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
+}
+unset($value); // break reference
