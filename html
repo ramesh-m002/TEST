@@ -1,0 +1,59 @@
+<div id="slotsblock">
+[?BB:ShowSlotsOther?]
+
+    <!-- NEW: Outer loop block to iterate through each Simulator (Sim 1, Sim 2, etc.) -->
+    [?BB:SimLoop?]
+    <table class="pg-list" style="margin-bottom: 20px;"> <!-- Added margin to create visual spacing between tables -->
+        <!-- Column Heading logic -->
+        <thead>
+            <tr>
+                <!-- NEW: Replaced static "Slots" with a dynamic variable for the Sim name -->
+                <th style="width:20%" colspan="2">Slots for [?sim_label?]</th>
+                <th style="width:20%">Seats</th>
+                <th style="width:20%">Type</th>
+                <th style="width:30%">Configuration</th>
+            </tr>
+        </thead>
+        <tbody>
+            [?BB:SlotRowNone?]
+            <tr>
+                <td class="nr" colspan="5">No records found.</td>
+            </tr>
+            [?CB:SlotRowNone?]
+            
+            <!-- Row logic: This now loops the slots SPECIFIC to the current Sim -->
+            [?BB:SlotRow?]
+            <tr>
+                <td class="al">[?v_tsslfr?]-[?v_tsslto?]<input type="hidden" name="v_tsslfr[[?ts_count?]]" value="[?v_tsslfr?]"><input type="hidden" name="v_tsslto[[?ts_count?]]" value="[?v_tsslto?]"></td>
+                <td class="ac">
+                    [?BB:SparkLineDispRow?]
+                    <span class="sparklinesdisp_detail[?sparkline_row_id?]">[?sparkline_value_row?]</span>&nbsp;
+                    <script language="javascript">
+                        sparkLineDetail("[?sparkline_row_id?]");
+                    </script>
+                    [?CB:SparkLineDispRow?]
+                </td>
+                <td class="ac [?e_v_tsseats?]"><input class="classonrequest" name="v_tsseats[[?ts_count?]]" value="[?v_tsseats?]" onkeypress="return qty_digits_only(event);"></td>
+                <td class="ac">
+                    [?BB:SlotTrainingTypeDropRow?]
+                    <input type="checkbox" class="classonrequest" name="v_tsttyp[[?ts_count?]]" value="[?training_type?]" [?v_tsttyp_selected?] /> [?training_type?]
+                    [?CB:SlotTrainingTypeDropRow?]
+                </td>
+                <td class="ac">
+                    <select class="classonrequest" name="v_tspgid[[?ts_count?]]">
+                        <option value="0">*Any</option>
+                        <!-- Row logic -->
+                        [?BB:SlotConfigurationDropRow?]
+                        <option value="[?training_pgid?]" [?v_tspgid_selected?]>[?training_pgdesc?]</option>
+                        [?CB:SlotConfigurationDropRow?]
+                    </select>
+                </td>
+            </tr>
+            [?CB:SlotRow?]
+        </tbody>
+    </table>
+    [?CB:SimLoop?]
+    <!-- END Outer loop block -->
+
+[?CB:ShowSlotsOther?]
+</div>
